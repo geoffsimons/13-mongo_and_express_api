@@ -96,4 +96,11 @@ describe('Player Routes', function() {
       });
     }); // bogus id
   }); // GET /api/player/:id
+
+  //TODO: GET /api/player
+
+  //TODO: PUT /api/player/:id
+
+  //TODO: DELETE /api/player/:id
+  
 });
