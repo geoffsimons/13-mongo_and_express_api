@@ -97,10 +97,76 @@ describe('Player Routes', function() {
     }); // bogus id
   }); // GET /api/player/:id
 
-  //TODO: GET /api/player
+  describe('GET /api/player', function() {
+    before( done => {
+      let tasks = [];
+      for(let i = 1; i < 5; i++) {
+        let p = {
+          name: `Player ${i}`,
+          email: `player.${i}@blah.com`,
+          timestamp: Date.now()
+        };
+        tasks.push(new Player(p).save());
+      }
+      Promise.all(tasks).then( players => {
+        this.playerList = players;
+        done();
+      })
+      .catch(done);
+    });
+
+    after( done => cleanup(done));
+
+    it('should get the player list', done => {
+      request.get(url).end( (err, res) => {
+        expect(res.status).to.equal(200);
+        expect(res.body).to.be.an('array');
+        expect(res.body).to.have.length(4);
+        //TODO: Assert more stuff?
+        done();
+      });
+    });
+
+  }); // GET /api/player
 
   //TODO: PUT /api/player/:id
 
   //TODO: DELETE /api/player/:id
-  
+
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
