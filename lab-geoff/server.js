@@ -13,8 +13,15 @@ mongoose.Promise = Promise;
 
 module.exports = exports = {};
 
+app.use(require('morgan')('dev'));
+app.use(require('cors')());
+//TODO: Add player-router
+app.use(require('./lib/error-middleware.js'));
+
 exports.start = function() {
   return new Promise( (resolve, reject) => {
+    // Q: Is this overkill to force mongoose to connect
+    //    before the app starts listening?
     mongoose.connect(MONGODB_URI)
     .then( () => {
       debug('Mongoose connected:', MONGODB_URI);
