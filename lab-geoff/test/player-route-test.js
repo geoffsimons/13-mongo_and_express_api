@@ -3,6 +3,7 @@
 const expect = require('chai').expect;
 const request = require('superagent');
 const Player = require('../model/player.js');
+const debug = require('debug')('mnp:player-route-test');
 
 const server = require('../server.js');
 
@@ -10,8 +11,16 @@ const url = `http://localhost:${server.PORT}/api/player`;
 
 const examplePlayer = {
   name: 'Joe Player',
-  email: 'joe@foo.bar'
+  email: 'joe@foo.bar',
+  timestamp: Date.now()
 };
+
+function cleanup(done) {
+  debug('cleanup()');
+  Player.remove({})
+  .then( () => done())
+  .catch( err => done(err));
+}
 
 describe('Player Routes', function() {
   before( done => {
@@ -51,5 +60,27 @@ describe('Player Routes', function() {
 
   }); // POST /api/player
 
+  describe('GET /api/player/:id', function() {
+    before( done => {
+      new Player(examplePlayer).save()
+      .then( player => {
+        this.tempPlayer = player;
+        done();
+      })
+      .catch(done);
+    });
 
+    after( done => cleanup(done));
+
+    describe('with a valid id', () => {
+      it('should return a player', done => {
+        request.get(`${url}/${this.tempPlayer.id}`)
+        .end( (err, res) => {
+          expect(err).to.not.be.an('error');
+          expect(res.status).to.equal(200);
+          done();
+        });
+      });
+    });
+  }); // GET /api/player/:id
 });
