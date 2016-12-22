@@ -78,9 +78,22 @@ describe('Player Routes', function() {
         .end( (err, res) => {
           expect(err).to.not.be.an('error');
           expect(res.status).to.equal(200);
+          expect(res.body.name).to.equal(examplePlayer.name);
+          expect(res.body.email).to.equal(examplePlayer.email);
+          expect(res.body).to.have.property('_id');
           done();
         });
       });
-    });
+    }); // valid id
+
+    describe('with a BOGUS id', () => {
+      it('should return a 404', done => {
+        request.get(`${url}/12345`)
+        .end( (err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    }); // bogus id
   }); // GET /api/player/:id
 });

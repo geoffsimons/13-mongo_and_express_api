@@ -11,6 +11,7 @@ const router = module.exports = new Router();
 
 router.post('/api/player', jsonParser, function(req, res, next) {
   debug('POST /api/player',req.body);
+  //TODO: Move the default timestamping into the model.
   req.body.timestamp = Date.now();
   new Player(req.body).save()
   .then( player => res.status(201).json(player))
@@ -25,7 +26,7 @@ router.get('/api/player/:id', function(req, res, next) {
   debug('GET /api/player/:id',req.params.id);
   Player.findById(req.params.id)
   .then( player => res.json(player))
-  .catch(next);
+  .catch( err => next(createError(404, err.name)) );
 });
 
 router.get('/api/player', function(req, res, next) {
