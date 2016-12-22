@@ -3,6 +3,7 @@
 const debug = require('debug')('mnp:player-route');
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
+const createError = require('http-errors');
 
 const Player = require('../model/player.js');
 
@@ -13,7 +14,11 @@ router.post('/api/player', jsonParser, function(req, res, next) {
   req.body.timestamp = Date.now();
   new Player(req.body).save()
   .then( player => res.status(201).json(player))
-  .catch(next);
+  .catch( err => {
+    // NOTE: It sucks that mongoose won't tell us what field is invalid?
+    err = createError(400, err.name);
+    next(err);
+  });
 });
 
 router.get('/api/player/:id', function(req, res, next) {

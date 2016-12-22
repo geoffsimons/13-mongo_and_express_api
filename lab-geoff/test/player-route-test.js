@@ -21,13 +21,13 @@ describe('Player Routes', function() {
   });
 
   describe('POST /api/player', function() {
-    describe('with a valid body', function() {
-      after( done => {
-        if(!this.tempPlayer) return done();
-        Player.remove({})
-        .then( () => done())
-        .catch(done);
-      });
+    after( done => {
+      if(!this.tempPlayer) return done();
+      Player.remove({})
+      .then( () => done())
+      .catch(done);
+    });
+    describe('with a valid body', () => {
       it('should create a player', done => {
         request.post(url)
         .send(examplePlayer)
@@ -38,5 +38,18 @@ describe('Player Routes', function() {
         });
       });
     }); //valid body
+    describe('with a missing name', () => {
+      it('should return 400', done => {
+        request.post(url)
+        .send({ email: 'a@b.c' })
+        .end( (err, res) => {
+          expect(res.status).to.equal(400);
+          done();
+        });
+      });
+    });
+
   }); // POST /api/player
+
+
 });
