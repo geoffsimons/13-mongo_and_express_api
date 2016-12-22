@@ -15,7 +15,7 @@ module.exports = exports = {};
 
 app.use(require('morgan')('dev'));
 app.use(require('cors')());
-//TODO: Add player-router
+app.use(require('./route/player-route.js'));
 app.use(require('./lib/error-middleware.js'));
 
 exports.start = function() {
