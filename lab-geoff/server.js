@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 4567;
 
-const MONGODB_URI = 'mongodb://localhost/junk';
+const MONGODB_URI = 'mongodb://localhost/mnp';
 mongoose.Promise = Promise;
 
 module.exports = exports = {};
