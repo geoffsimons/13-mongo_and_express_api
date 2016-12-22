@@ -47,5 +47,5 @@ router.delete('/api/player/:id', function(req, res, next) {
   debug('DELETE /api/player/:id',req.params.id);
   Player.findByIdAndRemove(req.params.id)
   .then( what => res.status(204).json(what))
-  .catch(next);
+  .catch( err => next(createError(404, err.name)) );
 });

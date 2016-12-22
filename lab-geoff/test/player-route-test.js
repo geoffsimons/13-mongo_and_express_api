@@ -142,7 +142,7 @@ describe('Player Routes', function() {
     after( done => cleanup(done));
 
     describe('with a valid id and update', () => {
-      it('should return a 202 with the updated player', done => {
+      it('should return a 202 OK', done => {
         let update = { name: 'Max Powers' };
         request.put(`${url}/${this.tempPlayer.id}`)
         .send(update)
@@ -155,46 +155,38 @@ describe('Player Routes', function() {
       });
     }); // valid id and update
 
-
   }); // PUT /api/player/:id
 
+  describe('DELETE /api/player/:id', function() {
+    before( done => {
+      new Player(examplePlayer).save()
+      .then( player => {
+        this.tempPlayer = player;
+        done();
+      })
+      .catch(done);
+    });
 
-  //TODO: DELETE /api/player/:id
+    after( done => cleanup(done));
 
-});
+    describe('with a valid id', () => {
+      it('should return 204', done => {
+        request.delete(`${url}/${this.tempPlayer.id}`)
+        .end( (err, res) => {
+          expect(res.status).to.equal(204);
+          done();
+        });
+      });
+    }); // valid id
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
+    describe('with a BOGUS id', () => {
+      it('should return 404', done => {
+        request.delete(`${url}/123456`)
+        .end( (err, res) => {
+          expect(res.status).to.equal(404);
+          done();
+        });
+      });
+    });
+  }); // DELETE /api/player/:id
+}); // Player Routes
