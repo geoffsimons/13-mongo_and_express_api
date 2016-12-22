@@ -129,7 +129,35 @@ describe('Player Routes', function() {
 
   }); // GET /api/player
 
-  //TODO: PUT /api/player/:id
+  describe('PUT /api/player/:id', function() {
+    before( done => {
+      new Player(examplePlayer).save()
+      .then( player => {
+        this.tempPlayer = player;
+        done();
+      })
+      .catch(done);
+    });
+
+    after( done => cleanup(done));
+
+    describe('with a valid id and update', () => {
+      it('should return a 202 with the updated player', done => {
+        let update = { name: 'Max Powers' };
+        request.put(`${url}/${this.tempPlayer.id}`)
+        .send(update)
+        .end( (err, res) => {
+          debug('after update:',res.body);
+          expect(res.status).to.equal(202);
+          expect(res.body.ok).to.equal(1);
+          done();
+        });
+      });
+    }); // valid id and update
+
+
+  }); // PUT /api/player/:id
+
 
   //TODO: DELETE /api/player/:id
 
